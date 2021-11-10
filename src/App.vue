@@ -63,7 +63,7 @@
         }
 
         get showWarning() {
-            return holdingsModule.parentHolding.children.reduce((a, b) => a + b.targetPercent, 0) !== 100;
+            return Math.abs(100 - holdingsModule.parentHolding.children.reduce((a, b) => a + b.targetPercent, 0)) > 0.15;
         }
 
         doExport() {

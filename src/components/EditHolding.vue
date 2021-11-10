@@ -67,14 +67,14 @@
         save() {
             if (holdingsModule.holdingToEdit) {
                 holdingsModule.holdingToEdit.name = this.name;
-                holdingsModule.holdingToEdit.balance = parseInt(this.balance);
-                holdingsModule.holdingToEdit.targetPercent = parseInt(this.targetPercentage);
+                holdingsModule.holdingToEdit.balance = parseFloat(this.balance);
+                holdingsModule.holdingToEdit.targetPercent = parseFloat(this.targetPercentage);
             } else {
                 const newHolding = new Holding(
                     v4(),
                     this.name,
-                    parseInt(this.balance),
-                    parseInt(this.targetPercentage),
+                    parseFloat(this.balance),
+                    parseFloat(this.targetPercentage),
                     []
                 );
 
