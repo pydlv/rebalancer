@@ -11,6 +11,8 @@
         label-sort-clear=""
         sort-by="targetPercent"
         sort-desc
+        foot-clone
+        no-footer-sorting
     >
         <template #cell(name)="row">
             <span class="fw-bold">{{ row.item.name }}</span>
@@ -41,6 +43,15 @@
                     Children
                 </b-button>
             </div>
+        </template>
+        <template #foot(name)="data">
+            Totals
+        </template>
+        <template #foot(balance)="data">
+            {{ new Intl.NumberFormat().format(holdingsModule.parentHolding.getTotalBalance()) }}
+        </template>
+        <template #foot(targetPercent)="data">
+            {{ new Intl.NumberFormat().format(holdingsModule.parentHolding.children.reduce((a, b) => a + b.targetPercent, 0)) }}
         </template>
     </b-table>
 </template>

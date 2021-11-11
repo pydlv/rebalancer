@@ -26,6 +26,12 @@
             <template #cell(name)="row">
                 <span class="fw-bold">{{ row.item.name }}</span>
             </template>
+            <template #cell(actualBalance)="row">
+                {{ formatNumber(row.item.actualBalance) }}
+            </template>
+            <template #cell(targetBalance)="row">
+                {{ formatNumber(row.item.targetBalance) }}
+            </template>
             <template #cell(difference)="row">
                 <span :class="getClass(row.item.difference)">{{ formatNumber(row.item.difference) }}</span>
             </template>
@@ -78,16 +84,14 @@
         get rows(): Row[] {
             const result: Row[] = [];
 
-            const processParent = (parent: Holding) => {
-                const parentBalance = parent.getTotalBalance();
-
+            const processParent = (parent: Holding, parentTargetBalance: number, shouldShowDescendents: boolean) => {
                 for (const child of parent.children) {
                     const childBalance = child.getTotalBalance();
-                    const targetBalance = parentBalance * (child.targetPercent / 100);
+                    const targetBalance = parentTargetBalance * (child.targetPercent / 100);
 
                     const isCategory = child.children.length > 0;
 
-                    if (this.showCategories || !isCategory) {
+                    if (shouldShowDescendents && (this.showCategories || !isCategory)) {
                         result.push({
                             name: child.name,
                             actualBalance: childBalance,
@@ -97,11 +101,11 @@
                         });
                     }
 
-                    if (isCategory) processParent(child);
+                    if (isCategory) processParent(child, targetBalance, shouldShowDescendents || child === holdingsModule.parentHolding);
                 }
             }
 
-            processParent(holdingsModule.parentHolding);
+            processParent(holdingsModule.rootHolding, holdingsModule.rootHolding.getTotalBalance(), holdingsModule.parentHolding === holdingsModule.rootHolding);
 
             return result;
         }
